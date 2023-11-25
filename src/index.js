@@ -12,6 +12,7 @@ import Login from "./auth/login";
 import Register from "./auth/register";
 import App from "./App";
 import "./input.css";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
