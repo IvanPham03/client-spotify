@@ -22,5 +22,6 @@ const Spinner = props => (
 );
 
 export default ({ loading, children, section = false }) => {
-  return loading ? <Spinner section={section} /> : children;
+  // return loading ? <Spinner section={section} /> : children;
+    return loading ? <Spinner section={section} /> : children;
 };

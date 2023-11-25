@@ -10,12 +10,12 @@ const playlist = ({ item, onClick, chart = false }) => (
     <div className="category-image playlist">
       <img
         alt="playlist cover"
-        src={item.icons ? item.icons[0].url : item.images[0].url}
+        // src={item.icons ? item.icons[0].url : item.images[0].url}
       />
     </div>
     {chart && (
       <div>
-        <p style={style}>{item.name}</p>
+        {/* <p style={style}>{ite m.name}</p> */}
       </div>
     )}
   </li>

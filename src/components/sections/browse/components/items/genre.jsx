@@ -5,9 +5,9 @@ const genre = ({ item, onClick }) => (
     <div className="category-image">
       <img
         alt="genre cover"
-        src={item.icons ? item.icons[0].url : item.images[0].url}
+        // src={item.icons ? item.icons[0].url : item.images[0].url}
       />
-      <p className="category-name">{item.name}</p>
+      {/* <p className="category-name">{item.name}</p> */}
     </div>
   </li>
 );

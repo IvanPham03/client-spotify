@@ -9,8 +9,6 @@ const artistName = {
   fontSize: 12
 };
 const numberOfArtists = 2; // Số lượng nghệ sĩ bạn muốn hiển thị
-
-const artistArray = [{name: "Trường đẹp trai", uri: "01"}, {name: "Trường đẹp khoai to", uri: "02"}];
 // Điền thông tin nghệ sĩ vào mảng
 
 const detailsSection = props => {
@@ -39,7 +37,7 @@ const detailsSection = props => {
             />}
       </div>
       <div className="artist-name" style={artistName}>
-        {/* {props.artists.map((artist, i) => (
+        {props.artists.map((artist, i) => (
           <span key={i}>
             <span
               className="artist"
@@ -49,18 +47,8 @@ const detailsSection = props => {
             </span>
             {i + 1 !== artists ? ', ' : ''}
           </span>
-        ))} */}
-        {artistArray.map((artist, i) =>
-          <span key={i}>
-            <span
-              className="artist"
-              onClick={() => props.onArtistClick(artist.uri.split(":")[2])}
-            >
-              {artist.name}
-            </span>
-            {i + 1 !== numberOfArtists ? ", " : ""}
-          </span>
-        )}
+        ))}
+        
       </div>
     </div>
   );
