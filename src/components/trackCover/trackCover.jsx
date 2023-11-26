@@ -1,22 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import withPlayer from '../../hoc/playerHoc';
-
+import withPlayer from "../../hoc/playerHoc";
+import meomeo from "../../utilities/ass/meomeo.jpg";
 const trackCover = props => {
-  // return props.currentSong.album ? (
-  //   <div className="cover">
-  //     <img
-  //       alt="cover"
-  //       src={
-  //         props.currentSong.album ? props.currentSong.album.images[2].url : ''
-  //       }
-  //       style={{ width: '100%' }}
-  //     />
-  //   </div>
-  // ) : null;
-  return <>Hello</>
+  return (
+    <div className="cover h-full w-full mt-6">
+      <img
+        alt="cover"
+        src={meomeo}
+        // style={{ width: "100%" height}}
+        className="h-full w-full"
+      />
+    </div>
+  );
 };
 
 // export default withPlayer(trackCover);
-export default trackCover
-
+export default trackCover;

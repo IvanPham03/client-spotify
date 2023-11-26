@@ -8,18 +8,16 @@ const artistName = {
   color: "#aaa",
   fontSize: 12
 };
-const numberOfArtists = 2; // Số lượng nghệ sĩ bạn muốn hiển thị
-// Điền thông tin nghệ sĩ vào mảng
+
 
 const detailsSection = props => {
-  const artists = 1000;
   return (
     <div className="details-section">
       <div className="add-remove-section">
         <p
           onClick={() => props.onAlbumClick(props.album)}
           className={
-            "song-name" + (props.songName.length > 30 ? " overflow" : "")
+            "song-name mt-3" + (props.songName.length > 30 ? " overflow" : "" )
           }
         >
           {props.songName}
@@ -37,22 +35,21 @@ const detailsSection = props => {
             />}
       </div>
       <div className="artist-name" style={artistName}>
-        {props.artists.map((artist, i) => (
+        {props.artists.map((artist, i) =>
           <span key={i}>
             <span
-              className="artist"
-              onClick={() => props.onArtistClick(artist.uri.split(':')[2])}
+              className="artist text-base"
+              onClick={() => props.onArtistClick(artist.uri.split(":")[2])}
             >
-              {artist.name}
+              {artist.user.username}
             </span>
-            {i + 1 !== artists ? ', ' : ''}
+            {i + 1 !== props.artists.length ? ", " : ""}
           </span>
-        ))}
-        
+        )}
       </div>
     </div>
   );
 };
 
 // export default withUiActions(withStatus(detailsSection));
-export default detailsSection
+export default detailsSection;

@@ -57,7 +57,7 @@ const audioSlice = createSlice({
 
 export const fetchAudio = createAsyncThunk("audio/fetchAudio", async id => {
     try {
-      const response = await axiosInstance.get(`tracks/file/AnhSeDuaEmVe-NQP-6309479.mp3`, {
+      const response = await axiosInstance.get(`tracks/file/${id}`, {
         responseType: "blob"
       });
       // Tạo URL từ Blob vì state không cho lưu blob

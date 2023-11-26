@@ -20,7 +20,7 @@ const sectionTwo = [
 ];
 
 const SiderMenu = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [active, setActive] = useState("browse");
   const generateItems = (items, playlist = false) => {
     return items.map(item =>
@@ -33,19 +33,18 @@ const SiderMenu = () => {
     );
   };
   const setActiveClick = (item, playlist) => {
-        setActive(item.id)
-        if (playlist) {
-          // this.props.onPlaylistClick(item.id);
-        } else {
-          
-          dispatch(setView(item.view || 'browse'))
-        }
-      };
+    setActive(item.id);
+    if (playlist) {
+      // this.props.onPlaylistClick(item.id);
+    } else {
+      dispatch(setView(item.view || "browse"));
+    }
+  };
   // const playlists = this.props.playlists ? this.props.playlists.items : [];
-  const playlists = []
+  const playlists = [];
   return (
     <ul className="side-menu-container">
-      {generateItems(sectionOne)} 
+      {generateItems(sectionOne)}
       <h3 className="library-header">Your Library</h3>
       {generateItems(sectionTwo)}
       <div className="user-playlist-container">

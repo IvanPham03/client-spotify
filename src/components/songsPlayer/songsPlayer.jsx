@@ -108,9 +108,9 @@ const SongsPlayer = () => {
         ? <DetailSection
             ids={track.id}
             // contains={this.props.contains}
-            songName={track.name || ""}
+            songName={track.trackName || ""}
             // album={this.props.currentSong.album.uri.split(":")[2]}
-            artists={track.artists || []}
+            artists={track.userTracks || []}
           />
         : null}
       <SongsControl {...{ playing, looping, shuffling, handlePlay }} />
