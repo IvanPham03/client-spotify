@@ -4,7 +4,7 @@ import withPlayer from "../../hoc/playerHoc";
 import meomeo from "../../utilities/ass/meomeo.jpg";
 const trackCover = props => {
   return (
-    <div className="cover h-full w-full mt-6">
+    <div className="cover h-full w-full">
       <img
         alt="cover"
         src={meomeo}

@@ -2,50 +2,54 @@ import React from "react";
 
 import withUiActions from "../../../hoc/uiHoc";
 import withStatus from "../../../hoc/statusHoc";
+import { useDispatch, useSelector } from "react-redux";
 
 const artistName = {
   fontFamily: "'Proxima Thin', Georgia, sans-serif",
   color: "#aaa",
   fontSize: 12
 };
-
+const numberOfArtists = 2; // Số lượng nghệ sĩ bạn muốn hiển thị
+// Điền thông tin nghệ sĩ vào mảng
 
 const detailsSection = props => {
+  const track = useSelector(state => state.track.value);
   return (
-    <div className="details-section">
+    <div className="details-section mt-2">
       <div className="add-remove-section">
         <p
-          onClick={() => props.onAlbumClick(props.album)}
+          // onClick={() => props.onAlbumClick(props.album)}
           className={
-            "song-name mt-3" + (props.songName.length > 30 ? " overflow" : "" )
+            "song-name" + (track.trackName.length > 30 ? " overflow" : "")
           }
         >
-          {props.songName}
+          {track.trackName}
         </p>
         {props.contains
           ? <i
               className="fa fa-check"
               aria-hidden="true"
-              onClick={() => props.removeSong(props.ids, true)}
+              // onClick={() => props.removeSong(track.ID, true)}
             />
           : <i
               className="fa fa-plus"
               aria-hidden="true"
-              onClick={() => props.addSong(props.ids, true)}
+              // onClick={() => props.addSong(track.ID, true)}
             />}
       </div>
       <div className="artist-name" style={artistName}>
-        {props.artists.map((artist, i) =>
-          <span key={i}>
-            <span
-              className="artist text-base"
-              onClick={() => props.onArtistClick(artist.uri.split(":")[2])}
-            >
-              {artist.user.username}
-            </span>
-            {i + 1 !== props.artists.length ? ", " : ""}
-          </span>
-        )}
+        {track !== null
+          ? track.userTracks.map((artist, i) =>
+              <span key={i}>
+                <span className="artist">
+                {/* // onClick={() => props.onArtistClick(artist.uri.split(':')[2])} */}
+                  {typeof artist === 'object' && artist.user !== null ? artist.user.username  : null}
+                  {/* {console.log(artist)} */}
+                </span>
+                {i < track.userTracks.length - 2 ? ", " : ""}
+              </span>
+            )
+          : null}
       </div>
     </div>
   );

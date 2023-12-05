@@ -1,82 +1,120 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { Component, useEffect } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import axios from '../../../axios';
+import axios from "../../../axios";
 
 import {
   fetchSongs,
   fetchRecentSongs,
   fetchMoreSongs
-} from '../../../store/actions/libraryActions';
+} from "../../../store/actions/libraryActions";
 
-import Playlist from '../../songsTable/playlistTable/playlistTable';
-import Header from '../../header/songsHeader';
-import Spinner from '../../spinner/spinner';
+import Playlist from "../../songsTable/playlistTable/playlistTable";
+import Header from "../../header/songsHeader";
+import Spinner from "../../spinner/spinner";
+import { fetchTrackList } from "../../../redux-toolkit/slices/trackListSlice";
 
-import withStatus from '../../../hoc/statusHoc';
-
-class SongsList extends Component {
-  componentDidMount() {
-    // khi mount thì fetch songs
-    this.fetchSongs();
-  }
-
-  fetchSongs() {
-    if (this.props.recently) { // fetch bài hát gần đây
-      this.props.fetchRecentSongs();
+export const songList = props => {
+  const dispatch = useDispatch();
+  const listTrack = useSelector(state => state.trackList.value);
+  const loading = useSelector(state => state.trackList.status);
+  const play = useSelector(state => state.audio.isPlaying);
+  useEffect(() => {
+    dispatch(fetchTrackList());
+    if (props.recently) {
+      // fetch type podcast
+      dispatch(fetchTrackList());
     } else {
-      this.props.fetchSongs();
+      dispatch(fetchTrackList());
     }
-  }
-
-  playTracks = (context, offset) => {
-    const songs = this.props.songs.slice(offset).map(s => s.track.uri);
-    axios.put('/api/track', { uris: songs });
-  };
-
-  render = () => (
-    <Spinner section loading={this.props.fetching}>
-      <div className="player-container">
-        <Header
-          title={this.props.recently ? 'Recently Played' : 'Songs'}
-          playSong={() => this.playTracks(this.props.songs, 0)}
-          pauseSong={this.props.pauseSong}
-          playing={this.props.playing}
-        />
-        <Playlist
-          songs={this.props.songs}
-          playSong={this.playTracks}
-          pauseSong={this.props.pauseSong}
-          current={this.props.currentSong}
-          playing={this.props.playing}
-          more={this.props.next ? true : false}
-          // fetchMoreSongs={this.props.fetchMoreSongs}
-        />
-      </div>
-    </Spinner>
-  );
-}
-const mapStateToProps = state => {
-  return {
-    songs: state.libraryReducer.songs ? state.libraryReducer.songs.items : [],
-    user: state.userReducer.user.id,
-    fetching: state.libraryReducer.fetchSongsPending,
-    next: state.libraryReducer.songs ? state.libraryReducer.songs.next : false
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {
-      fetchSongs,
-      fetchRecentSongs,
-      fetchMoreSongs
-    },
-    dispatch
+  }, []);
+  return (
+    // <Spinner section loading={loading}>
+    <div className="player-container">
+      <Header
+        title={props.recently ? "Podcasts" : "Songs"}
+        // playSong={() => this.playTracks(this.props.songs, 0)}
+        // pauseSong={this.props.pauseSong}
+        // playing={this.props.playing}
+      />
+      <Playlist
+        songs={listTrack}
+        // playSong={this.playTracks}
+        // pauseSong={this.props.pauseSong}
+        // current={this.props.currentSong}
+        // playing={this.props.playing}
+        // more={this.props.next ? true : false}
+        // fetchMoreSongs={this.props.fetchMoreSongs}
+      />
+    </div>
+    // </Spinner>
   );
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStatus(SongsList));
+
+export default songList;
+
+// class SongsList extends Component {
+//   componentDidMount() {
+//     // khi mount thì fetch songs
+//     this.fetchSongs();
+//   }
+
+//   fetchSongs() {
+//     if (this.props.recently) { // fetch bài hát gần đây
+//       this.props.fetchRecentSongs();
+//     } else {
+//       this.props.fetchSongs();
+//     }
+//   }
+
+//   playTracks = (context, offset) => {
+//     const songs = this.props.songs.slice(offset).map(s => s.track.uri);
+//     axios.put('/api/track', { uris: songs });
+//   };
+
+//   render = () => (
+//     <Spinner section loading={this.props.fetching}>
+//       <div className="player-container">
+//         <Header
+//           title={this.props.recently ? 'Recently Played' : 'Songs'}
+//           playSong={() => this.playTracks(this.props.songs, 0)}
+//           pauseSong={this.props.pauseSong}
+//           playing={this.props.playing}
+//         />
+//         <Playlist
+//           songs={this.props.songs}
+//           playSong={this.playTracks}
+//           pauseSong={this.props.pauseSong}
+//           current={this.props.currentSong}
+//           playing={this.props.playing}
+//           more={this.props.next ? true : false}
+//           // fetchMoreSongs={this.props.fetchMoreSongs}
+//         />
+//       </div>
+//     </Spinner>
+//   );
+// }
+// const mapStateToProps = state => {
+//   return {
+//     songs: state.libraryReducer.songs ? state.libraryReducer.songs.items : [],
+//     user: state.userReducer.user.id,
+//     fetching: state.libraryReducer.fetchSongsPending,
+//     next: state.libraryReducer.songs ? state.libraryReducer.songs.next : false
+//   };
+// };
+
+// const mapDispatchToProps = dispatch => {
+//   return bindActionCreators(
+//     {
+//       fetchSongs,
+//       fetchRecentSongs,
+//       fetchMoreSongs
+//     },
+//     dispatch
+//   );
+// };
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(withStatus(SongsList));

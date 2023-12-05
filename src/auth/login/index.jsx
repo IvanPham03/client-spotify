@@ -3,41 +3,51 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../ass/meomeo.jpg";
 import { useState } from "react";
 import axiosInstance from "../../axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setToken } from "../../store/actions/sessionActions";
+import { fetchUser, setUser } from "../../redux-toolkit/slices/userSlice";
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSubmit = (e) =>{
-    e.preventDefault()
+  const dispatch = useDispatch();
+  const handleSubmit = e => {
+    e.preventDefault();
     if (!email || !password) {
-      setError('Email và Password không được để trống');
+      setError("Email và Password không được để trống");
       return;
     }
-    handleLogin()
-  } 
+    handleLogin();
+  };
 
-  const handleLogin = async () =>{
+  const handleLogin = async () => {
     const data = {
       email: email,
-      password: password,
+      password: password
     };
-  
+
     try {
       const response = await axiosInstance.post("api/Authenticate/login", data);
       console.log(response.data.token);
-      localStorage.setItem('accessToken', response.data.token);
-      if(response.status){
-        alert("Đăng nhập thành công")
-        navigate("/")
-      }
-      else{
-        alert("Đăng nhập thất bại")
+      localStorage.setItem("accessToken", response.data.token);
+      // lưu vao local để load lại vẫn còn token
+      if (response.status === 200) {
+        alert("Đăng nhập thành công");
+        // console.log(response.data);
+        dispatch(fetchUser());
+        if(response.data.role[0].name === "ADMIN"){
+          navigate('/admin')
+        }
+        else {
+          navigate("/")
+        }
       }
     } catch (error) {
-      console.error('POST error:', error);
+      setError("Email hoặc mật khẩu không chính xác!");
+      console.error("POST error:", error);
     }
-  }
+  };
   return (
     <div className="h-screen w-screen">
       <div className="w-full flex flex-wrap justify-center">
@@ -59,14 +69,14 @@ const Login = () => {
             <form className="flex flex-col pt-3" onSubmit={handleSubmit}>
               <div className="flex flex-col pt-4">
                 <label htmlFor="email" className="text-lg">
-                  Email 
+                  Email
                 </label>
                 <input
                   type="email"
                   id="email"
                   placeholder="your@email.com"
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={()=>setError("")}
+                  onChange={e => setEmail(e.target.value)}
+                  onFocus={() => setError("")}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -79,18 +89,23 @@ const Login = () => {
                   type="password"
                   id="password"
                   placeholder="Password"
-                  onFocus={()=>setError("")}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setError("")}
+                  onChange={e => setPassword(e.target.value)}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              {error && <p className="text-red-500 mt-3 text-sm">{error}</p>}
+              {error &&
+                <p className="text-red-500 mt-3 text-sm">
+                  {error}
+                </p>}
               <input
                 type="submit"
                 value="Đăng nhập"
                 className="bg-black text-white font-bold text-lg hover:bg-gray-700 p-2 mt-8 rounded"
               />
             </form>
+            <p className="mt-4 pl-1">Bạn quên mật khẩu?</p>
+            <button className="bg-black text-white font-bold text-lg hover:bg-red-700 p-2 mt-2 rounded" onClick={()=> navigate("/reset-password")}> Đổi mật khẩu</button>
             <div className="text-center pt-12 pb-12">
               <p>
                 Bạn chưa có tài khoản?{" "}

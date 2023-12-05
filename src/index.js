@@ -10,9 +10,12 @@ import {
 import store from "./redux-toolkit/store.js";
 import Login from "./auth/login";
 import Register from "./auth/register";
+import Reset from './auth/reset'
+import Admin from './admin'
+import Developing from './Error/developing'
 import App from "./App";
+import NotFound from './Error/notfound/index.jsx'
 import "./input.css";
-import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +30,22 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+  {
+    path: "/reset-password",
+    element: <Reset />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />
+  },
+  {
+    path: "/dev",
+    element: <Developing />
+  },
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 ReactDOM.render(
   <Provider store={store}>

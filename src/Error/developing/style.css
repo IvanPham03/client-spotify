@@ -1,0 +1,15 @@
+/* YourStyles.css */
+
+@keyframes moveUpDown {
+  0%,
+  100% {
+    transform: rotate(-20deg);
+  }
+  50% {
+    transform: rotate(20deg);
+  }
+}
+
+.animate-image {
+  animation: moveUpDown 3s linear infinite;
+}

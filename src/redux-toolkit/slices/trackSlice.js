@@ -23,18 +23,17 @@ const trackSlice = createSlice({
         state.status = 'succeeded';
         state.value = action.payload;
       })
-      // .addCase(fetchTrack.rejected, () => (state, action) =>{
-        // state.error = action.error;
-        // state.status = "failed";
-        // console.log(error);
-      // });
+      .addCase(fetchTrack.rejected, () => (state, action) =>{
+        state.error = action.error;
+        state.status = "failed";
+        console.log(error);
+      });
   }
 });
 
 export const fetchTrack = createAsyncThunk("track/fetchTrack", async id => {
   try {
     const response = await axiosInstance.get(`tracks/${id}`); // gọi instance và get endpoint
-
     console.log(response.data);
     return response.data;
   } catch (error) {

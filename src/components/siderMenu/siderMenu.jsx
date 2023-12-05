@@ -1,19 +1,18 @@
-import React, { Component, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-
-import { fetchPlaylistsMenu } from "../../store/actions/playlistActions";
-
+import React, { Component, useEffect, useState } from "react";
+import {  useDispatch, useSelector } from "react-redux";
 import "./siderMenu.css";
 
-import withUiActions from "../../hoc/uiHoc";
 import MenuItem from "./components/menuItem";
-import { setView } from "../../redux-toolkit/slices/uiSlice";
+import {
+  setView
+} from "../../redux-toolkit/slices/uiSlice";
+import {fetchPlaylistTrack} from '../../redux-toolkit/slices/playlistTrack'
+import { fetchPlaylistOnly } from "../../redux-toolkit/slices/playlistOnly";
 
 const sectionOne = [{ name: "Browse", view: "browse", id: 1 }];
 
 const sectionTwo = [
-  { name: "Recently Played", view: "recently", id: 2 },
+  { name: "Podcast", view: "recently", id: 2 },
   { name: "Songs", view: "songs", id: 3 },
   { name: "Albums", view: "albums", id: 4 },
   { name: "Artists", view: "artists", id: 5 }
@@ -22,6 +21,11 @@ const sectionTwo = [
 const SiderMenu = () => {
   const dispatch = useDispatch();
   const [active, setActive] = useState("browse");
+  const playlists = useSelector(state => state.playlist.playlist);
+  if (playlists !== null) {
+    console.log(playlists);
+  }
+
   const generateItems = (items, playlist = false) => {
     return items.map(item =>
       <MenuItem
@@ -32,16 +36,28 @@ const SiderMenu = () => {
       />
     );
   };
+  const generatePlaylist = (items, playlist = false) => {
+    return items.map(
+      item =>
+        <MenuItem
+          key={item.id}
+          title={item.playlistName}
+          active={active === item.id}
+          onClick={() => setActiveClick(item, playlist)}
+        />
+      // <p key={item.ID}>{item.ID}</p>
+    );
+  };
   const setActiveClick = (item, playlist) => {
     setActive(item.id);
     if (playlist) {
-      // this.props.onPlaylistClick(item.id);
+      // dispatch(fetchPlaylistTrack(item.id));
+      // dispatch(fetchPlaylistOnly(item.id))
+      dispatch(setView('playlist'));
     } else {
       dispatch(setView(item.view || "browse"));
     }
   };
-  // const playlists = this.props.playlists ? this.props.playlists.items : [];
-  const playlists = [];
   return (
     <ul className="side-menu-container">
       {generateItems(sectionOne)}
@@ -49,69 +65,11 @@ const SiderMenu = () => {
       {generateItems(sectionTwo)}
       <div className="user-playlist-container">
         <h3 className="library-header">Playlists</h3>
-        {generateItems(playlists, true)}
+        {playlists !== null ? generatePlaylist(playlists, true) : ""}
       </div>
     </ul>
   );
 };
 
-// class SiderMenu extends Component {
-//   state = {
-//     active: 'Browse'
-//   };
-
-//   componentDidMount() {
-//     this.props.fetchPlaylistsMenu();
-//   }
-
-//   setActive = (item, playlist) => {
-//     this.setState({ active: item.id });
-//     if (playlist) {
-//       this.props.onPlaylistClick(item.id);
-//     } else {
-//       this.props.setView(item.view || 'browse');
-//     }
-//   };
-
-//   generateItems(items, playlist = false) {
-//     return items.map(item => (
-//       <MenuItem
-//         key={item.id}
-//         title={item.name}
-//         active={this.state.active === item.id}
-//         onClick={() => this.setActive(item, playlist)}
-//       />
-//     ));
-//   }
-
-//   render = () => {
-//     const playlists = this.props.playlists ? this.props.playlists.items : [];
-//     return (
-//       <ul className="side-menu-container">
-//         {this.generateItems(sectionOne)}
-//         <h3 className="library-header">Your Library</h3>
-//         {this.generateItems(sectionTwo)}
-//         <div className="user-playlist-container">
-//           <h3 className="library-header">Playlists</h3>
-//           {this.generateItems(playlists, true)}
-//         </div>
-//       </ul>
-//     );
-//   };
-// }
-
-// const mapStateToProps = state => {
-//   return {
-//     playlists: state.playlistReducer.playlists || null
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return bindActionCreators({ fetchPlaylistsMenu }, dispatch);
-// };
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(withUiActions(SiderMenu));
 
 export default SiderMenu;

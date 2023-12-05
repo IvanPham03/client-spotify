@@ -15,10 +15,13 @@ const uiSlice = createSlice({
             const { modal, mode } = action.payload;
             state.modal = modal
             state.mode = mode
+        },
+        setModalEdit: (state, action) =>{
+            state.modal = action.payload
         }
     }
 })
 
 
-export const {setView, setModal} = uiSlice.actions
+export const {setView, setModal, setModalEdit} = uiSlice.actions
 export default uiSlice.reducer;

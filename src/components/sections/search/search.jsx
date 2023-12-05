@@ -1,41 +1,51 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
-import { fetchSearchData } from '../../../store/actions/searchActions';
+import { fetchSearchData } from "../../../store/actions/searchActions";
 
-import Index from './components/index/index';
-import NoResults from './components/noResults/noResults';
-import Results from './components/results/results';
-import AllResults from './components/allResults/allResults';
+import Index from "./components/index/index";
+import NoResults from "./components/noResults/noResults";
+import Results from "./components/results/results";
+import AllResults from "./components/allResults/allResults";
 
-import './search.css';
+import "./search.css";
 
-class Search extends Component {
-  state = {
-    mode: ''
-  };
+const search = () => {
+  return (
+    <div className="search-container">
+      <Results />
+    </div>
+  );
+};
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.query !== this.props.query) {
-      this.setState({ mode: '' });
-    }
-  }
+export default search;
+// class Search extends Component {
+//   state = {
+//     mode: ''
+//   };
 
-  changeMode = mode => {
-    this.setState({ mode: mode });
-  };
+//   componentDidUpdate(prevProps) {
+//     if (prevProps.query !== this.props.query) {
+//       this.setState({ mode: '' });
+//     }
+//   }
 
-  render = () => {
-    const results =
-      this.props.songs.length ||
-      this.props.playlists.length ||
-      this.props.artists.length ||
-      this.props.albums.length;
+//   changeMode = mode => {
+//     this.setState({ mode: mode });
+//   };
 
-    return (
-      <div className="search-container">
-        {/* {this.state.mode && (
+//   render = () => {
+//     const results =
+//       this.props.songs.length ||
+//       this.props.playlists.length ||
+//       this.props.artists.length ||
+//       this.props.albums.length;
+
+//     return (
+//       <div className="search-container">
+{
+  /* {this.state.mode && (
           <AllResults
             query={this.props.query}
             type={this.state.mode}
@@ -49,8 +59,10 @@ class Search extends Component {
             {...this.props}
           />
         ) : null}
-        {this.props.query && !results && <NoResults query={this.props.query} />} */}
-      </div>
+        {this.props.query && !results && <NoResults query={this.props.query} />} */
+}
+{
+  /* </div>
     );
   };
 }
@@ -77,4 +89,5 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search);
+)(Search); */
+}

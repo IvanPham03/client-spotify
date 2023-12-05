@@ -5,106 +5,48 @@ import Spinner from "./components/spinner/spinner";
 import LeftSection from "./containers/leftSection/leftSection";
 import MainSection from "./containers/mainSection/mainSection";
 import RightSection from "./containers/rightSection/rightSection";
-import { setToken, fetchUser } from "./store/actions/sessionActions";
 import { fetchAudio } from "./redux-toolkit/slices/audioSlice";
+import { fetchUser } from "./redux-toolkit/slices/userSlice";
+import { fetchPlaylist } from "./redux-toolkit/slices/playlistSlice";
 import "./App.css";
 
 // function component
 const App = () => {
   const dispatch = useDispatch();
-  const track = useSelector(state => state.track.value);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    dispatch(fetchTrack("a4166d47-950a-4273-8a91-8c733ccd9591"));
-    setLoading(false); // nếu như loading bằng true thì spinner sẽ chạy
-  }, []);
 
-  // fetch file luu vao state
-  useEffect(
-    () => {
-      if (track.id !== undefined) {
-        dispatch(fetchAudio(track.id));
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("accessToken")
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchTrack("0ba6dd62-26fe-4316-958a-04ce0e561b95"));
+        await dispatch(fetchAudio("0ba6dd62-26fe-4316-958a-04ce0e561b95"));
+        if(token){
+          // console.log("hello");
+          await dispatch(fetchUser());
+        }
+        // Delay 1 giây trước khi đặt loading thành false
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      } catch (error) {
+        console.error("Dispatch failed:", error);
+        // Xử lý lỗi nếu các dispatch không thành công
       }
-    },
-    [track]
-  );
+    };
+
+    fetchData();
+  }, [token]);
 
   return (
-      <div className="app">
-        <Spinner loading={loading}>
-          <LeftSection /> 
-          <MainSection />
-          <RightSection />
-        </Spinner>
-      </div>
+    <div className="app">
+      <Spinner loading={loading}>
+        <LeftSection />
+        <MainSection />
+        <RightSection />
+      </Spinner>
+    </div>
   );
 };
 
 export default App;
-
-// class App extends Component {
-//   state = {
-//     // playerLoaded: false
-//   };
-
-//   componentDidMount() {
-//     const token = Login.getToken();
-//     if (!token) {
-//       Login.logInWithSpotify();
-//     } else {
-//       this.setState({ token: token });
-//       this.props.setToken(token);
-//       this.props.fetchUser();
-//     }
-//   }
-
-//   render() {
-//     const dispatch = useDispatch();
-//     // let webPlaybackSdkProps = {
-//     //   playerName: 'Spotify React Player',
-//     //   playerInitialVolume: 1.0,
-//     //   playerRefreshRateMs: 1000,
-//     //   playerAutoConnect: true,
-//     //   onPlayerRequestAccessToken: () => this.state.token,
-//     //   onPlayerLoading: () => {},
-//     //   onPlayerWaitingForDevice: () => {
-//     //     this.setState({ playerLoaded: true });
-//     //   },
-//     //   onPlayerError: e => {
-//     //     console.log(e);
-//     //   },
-//     //   onPlayerDeviceSelected: () => {
-//     //     this.setState({ playerLoaded: true });
-//     //   }
-//     // };
-//     return (
-//       <div className="app">
-//         {/* <WebPlaybackReact {...webPlaybackSdkProps}> */}
-//           <Spinner loading={this.state.playerLoaded}>
-//             <LeftSection />
-//             <MainSection />
-//             <RightSection />
-//           </Spinner>
-//         {/* </WebPlaybackReact> */}
-//       </div>
-//     );
-//   }
-// }
-
-// export default App
-
-// // const mapStateToProps = state => {
-// //   return {
-// //     token: state.sessionReducer.token
-// //   };
-// // };
-
-// // const mapDispatchToProps = dispatch => ({
-// //   setToken: token => dispatch(setToken(token)),
-// //   fetchUser: () => dispatch(fetchUser())
-// // });
-
-// // export default connect(
-// //   mapStateToProps,
-// //   mapDispatchToProps
-// // )(App);

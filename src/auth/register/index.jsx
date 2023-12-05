@@ -19,7 +19,7 @@ const Register = () => {
   const handleSubmit = (e) =>{
     e.preventDefault()
     if (!email || !password || !confirmPassword || !name) {
-      setError('Email và Password không được để trống');
+      setError('Vui lòng kiểm tra lại thông tin đăng ký!');
       return;
     }
     if( password !== confirmPassword){
@@ -116,7 +116,7 @@ const Register = () => {
               <input
                 type="password"
                 id="confirm-password"
-                placeholder="Password"
+                placeholder="Re-enter password"
                 onFocus={()=>setError("")}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
@@ -125,7 +125,7 @@ const Register = () => {
             {error && <p className="text-red-500 mt-3 text-sm">{error}</p>}
             <input
               type="submit"
-              value="Register"
+              value="Đăng ký"
               className="bg-black text-white font-bold text-lg hover:bg-gray-700 p-2 mt-8 rounded"
             />
           </form>

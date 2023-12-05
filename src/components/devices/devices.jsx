@@ -49,9 +49,9 @@ class Devices extends Component {
 
   render = () => (
     <div className="devices-container">
-      <i onClick={this.toddleState} className="fa fa-desktop" />
+      <i className="fa fa-desktop" />
       <div
-        onClick={this.hideDevices}
+        // onClick={this.hideDevices}
         className={`overlay ${this.state.show ? 'active' : ''}`}
       />
       <div className={`devices ${!this.state.show ? 'hide' : ''}`}>
@@ -60,7 +60,7 @@ class Devices extends Component {
           <i className="fa fa-question-circle-o" aria-hidden="true" />
         </div>
         <img src={media} alt="devices" />
-        {this.state.devices.length > 1 && this.renderDevices()}
+        {/* {this.state.devices.length > 1 && this.renderDevices()} */}
         {this.state.devices.length === 1 && (
           <div className="no-results">
             <div>

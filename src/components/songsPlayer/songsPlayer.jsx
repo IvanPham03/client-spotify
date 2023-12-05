@@ -23,11 +23,13 @@ const SongsPlayer = () => {
   const shuffling = useSelector(state => state.audio.isShuffling);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
+  const [isChangingSrc, setIsChangingSrc] = useState(false);
   const intervalRef = useRef();
   const audioRef = useRef(new Audio());
 
   const handlePlay = () => {
     dispatch(togglePlaying());
+    console.log(playing);
   };
   const handleShuffle = () => {
     dispatch(toogleShuffling());
@@ -35,6 +37,30 @@ const SongsPlayer = () => {
   const handleLoop = () => {
     dispatch(toggleLooping());
   };
+// Effect để xử lý việc thay đổi nguồn audio
+  useEffect(() => {
+    if (audioRef.current && audioMp3 !== audioRef.current.src) {
+      if (playing) {
+        audioRef.current.pause();
+        clearInterval(intervalRef.current);
+      }
+      audioRef.current.src = audioMp3;
+      setIsChangingSrc(true);
+    }
+  }, [audioMp3, playing]);
+
+  // Effect để xử lý sau khi audio đã load xong nguồn mới
+  useEffect(() => {
+    if (isChangingSrc) {
+      audioRef.current.load();
+      setIsChangingSrc(false);
+
+      if (playing) {
+        audioRef.current.play();
+        startTimer();
+      }
+    }
+  }, [isChangingSrc, playing]);
 
   useEffect(
     () => {
@@ -72,6 +98,9 @@ const SongsPlayer = () => {
         console.log(audioRef.current.currentTime);
         setPosition(audioRef.current.currentTime);
         // }
+        if(audioRef.current.currentTime === audioRef.current.duration){
+          dispatch(togglePlaying());
+        }
       },
       [1000]
     );
@@ -108,9 +137,9 @@ const SongsPlayer = () => {
         ? <DetailSection
             ids={track.id}
             // contains={this.props.contains}
-            songName={track.trackName || ""}
+            songName={track.name || ""}
             // album={this.props.currentSong.album.uri.split(":")[2]}
-            artists={track.userTracks || []}
+            artists={track.artists || []}
           />
         : null}
       <SongsControl {...{ playing, looping, shuffling, handlePlay }} />
@@ -121,6 +150,7 @@ const SongsPlayer = () => {
         duration={duration}
         onChange={value => audioRef.current.currentTime = Math.round(value * duration)}
       />
+       <VolumeControl />
     </div>
   );
 };
