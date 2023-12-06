@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setModalEdit } from "../../../../redux-toolkit/slices/uiSlice";
-import axios from "../../../../axios";
-import { fetchPlaylist } from "../../../store/slices/playlistSlice";
+import { setModalUser } from "../../../redux-toolkit/slices/uiSlice";
+import axios from "../../../axios";
+import { fetchUser } from "../../store/slices/userSlice";
 const update = props => {
   const dispacth = useDispatch();
-  const modal = useSelector(state => state.ui.modal);
+  const modal = useSelector(state => state.ui.user);
   const user = useSelector(state => state.user.user);
   const [create, setCreate] = useState(null);
   const [update, setUpdate] = useState(null);
-  const [playlistName, setPlaylistName] = useState(null);
-  const [playlistDescription, setPlaylistDescription] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const [email, setMail] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [img, setImg] = useState(null);
+  const [roleUser, setRole] = useState("USER");
   const handleClickCancel = () => {
-    dispacth(setModalEdit(false));
+    dispacth(setModalUser(false));
   };
 
   const formatDateTime = dateTimeString => {
@@ -30,13 +33,13 @@ const update = props => {
     const seconds = timePart.substring(4, 6);
 
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    console.log(formattedDateTime);
     return formattedDateTime;
   };
 
   const handleSubmit = async () => {
     try {
-      const playlistId =
-        props.playlistUpdate !== null ? props.playlistUpdate.id : "";
+      const user = props.userUpdate !== null ? props.userUpdate.id : "";
       const userId = user.id;
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
@@ -47,94 +50,99 @@ const update = props => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
+        },
+        params:{
+          role: roleUser
         }
       };
+      console.log(roleUser);
       const data = {
-        playlistDescription: playlistDescription,
-        playlistName: playlistName,
+        username: userName,
+        email: email,
+        role: roleUser,
+        phoneNumber: phone,
         createAt: create,
         updateOn: update
       };
 
-      if (playlistId !== "" && userId !== null) {
+      if (userId !== "" && userId !== null) {
         const res = await axios.put(
-          `Playlist/update/${playlistId}/by/${userId}`,
+          `/api/Authenticate/users/${user}?role=${roleUser}`,
           data,
-          {
-            config
-          }
+          config
         );
-        if(res.data){
-          alert("cập nhật thành công")
-          dispacth(setModalEdit(false))
-          dispacth(fetchPlaylist())
+        if (res.data) {
+          alert("cập nhật thành công!");
+          dispacth(setModalUser(false));
+          dispacth(fetchUser());
         }
       }
     } catch (error) {
+      alert("cập nhật thất bại!");
       console.log(error);
     }
   };
   useEffect(
     () => {
-      if (modal) {
-        setPlaylistDescription(props.playlistUpdate.playlistDescription);
-        setPlaylistName(props.playlistUpdate.playlistName);
-        setUpdate(formatDateTime(props.playlistUpdate.updateOn));
-        setCreate(formatDateTime(props.playlistUpdate.createAt));
+      if (props.userUpdate) {
+        setUserName(props.userUpdate.username);
+        setUpdate(formatDateTime(props.userUpdate.updateOn));
+        setCreate(formatDateTime(props.userUpdate.createAt));
+        setImg(props.userUpdate.pathImg);
+        setMail(props.userUpdate.email);
+        setPhone(props.userUpdate.phoneNumber);
+        setRole(props.userUpdate.roles[0].name);
       }
     },
-    [modal]
+    [props]
   );
-
-  const handleDelete = async () => {
-    try {
-      const playlistId =
-        props.playlistUpdate !== null ? props.playlistUpdate.id : "";
-      const userId = user.id;
-      const accessToken = localStorage.getItem("accessToken");
-      if (!accessToken) {
-        return null; // Xử lý khi không tìm thấy token
-      }
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        }
-      };
-
-      if (playlistId !== "" && userId !== null) {
-        const res = await axios.delete(
-          `Playlist/${playlistId}/deleteBy/${userId}`,
-          {
-            config
-          }
-        );
-        console.log(res.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // Xử lý sự kiện thay đổi giá trị của input
   const handleInputChange = event => {
     setCreate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
   };
   const handleInputUpdate = event => {
     setUpdate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
   };
-  const handleInputDescription = event => {
-    setPlaylistDescription(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
+  console.log(props.userUpdate);
+  const handleDelete = async () => {
+    try {
+      const userP = props.userUpdate !== null ? props.userUpdate.id : "";
+      const userId = user.id;
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        return null; // Xử lý khi không tìm thấy token
+      }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        }
+      };
+
+      if (userP !== "" && userId !== null) {
+        const res = await axios.delete(`/api/Authenticate/users/${userP}`, {
+          config
+        });
+        if (res.status === 200) {
+          alert(`Xoá thành công ${userId}`);
+          dispacth(fetchUser());
+        } else {
+          alert(`Xoá thất bại`);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      alert(`Xoá thất bại`);
+    }
   };
-  const handleInputPlaylististname = event => {
-    setPlaylistName(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
-  };
+  const allRoles = ["ARTIST", "USER", "ADMIN"];
+  // const otherRoles = allRoles.filter(role => role !== roleUser);
   return (
     <div>
       <div className={`playlist-Modal ${modal ? "active" : ""}`}>
         <div className="modal-content mt-14">
           <div className="text-center my-5">
-            <h1 className="text-2xl">Hello các bạn trẻ</h1>
+            <h1 className="text-2xl">Thông tin</h1>
           </div>
           <div className="modal-body mb-5">
             <form class="mx-2 mt-5">
@@ -152,61 +160,93 @@ const update = props => {
                   placeholder=""
                   readOnly
                   value={
-                    props.playlistUpdate !== null ? props.playlistUpdate.id : ""
+                    props.userUpdate.id !== undefined ? props.userUpdate.id : ""
                   }
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="playlistName"
+                  for="userName"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Tên
                 </label>
                 <input
                   type="text"
-                  id="playlistName"
-                  onChange={handleInputPlaylististname}
-                  value={playlistName !== null ? playlistName : ""}
+                  id="userName"
+                  onChange={e => setUserName(e.target.value)}
+                  value={userName}
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="playlistDescription"
+                  for="playlistPolicy"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Mô tả
+                  Email
                 </label>
                 <input
                   type="text"
-                  onChange={handleInputDescription}
-                  id="playlistDescription"
+                  id="playlistPolicy"
+                  onChange={e => setMail(e.target.value)}
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  value={
-                    playlistDescription !== null ? playlistDescription : ""
-                  }
+                  readOnly
+                  value={email ? email : "null"}
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="imgPlaylist"
+                  for="2"
+                  class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Điện thoại
+                </label>
+                <input
+                  type="text"
+                  id="2"
+                  class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                  readOnly
+                  onChange={e => setPhone(e.target.value)}
+                  value={phone ? phone : "null"}
+                />
+              </div>
+              <div class="mb-5 flex justify-between">
+                <label
+                  for="3"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
                   Hình ảnh
                 </label>
                 <input
-                  type="file"
-                  id="imgPlaylist"
+                  type="text"
+                  id="3"
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  value={
-                    props.playlistUpdate !== null
-                      ? props.playlistUpdate.imgPlaylist
-                      : ""
-                  }
+                  readOnly
+                  onChange={e => setImg(e.target.value)}
+                  value={img ? img : "null"}
                 />
               </div>
-
+              <div class="mb-5 flex justify-between">
+                <label
+                  for="4"
+                  class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Vai trò
+                </label>
+                <select
+                  value={roleUser} // Set giá trị của select bằng state
+                  onChange={(e) => setRole(e.target.value)}
+                  id="countries"
+                  class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                >
+                  {allRoles.map(role =>
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  )}
+                </select>
+              </div>
               <div class="mb-5 flex justify-between">
                 <label
                   for="createAt"
@@ -235,42 +275,6 @@ const update = props => {
                   value={update !== null ? update : ""}
                   onChange={handleInputUpdate}
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                />
-              </div>
-              <div class="mb-5 flex justify-between">
-                <label
-                  for="user"
-                  class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Người tạo
-                </label>
-                <input
-                  readOnly
-                  type="text"
-                  id="user"
-                  value={
-                    props.playlistUpdate !== null ? props.playlistUpdate.id : ""
-                  }
-                  class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                />
-              </div>
-              <div class="mb-5 flex justify-between">
-                <label
-                  for="playlistPolicy"
-                  class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Hiển thị
-                </label>
-                <input
-                  type="text"
-                  id="playlistPolicy"
-                  class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  readOnly
-                  value={
-                    props.playlistUpdate !== null
-                      ? props.playlistUpdate.playlistPolicy
-                      : ""
-                  }
                 />
               </div>
 
@@ -311,8 +315,3 @@ const update = props => {
 };
 
 export default update;
-
-//    {/* Open the modal using document.getElementById('ID').showModal() method */}
-{
-  /* <button className="btn" onClick={()=>document.getElementById('my_modal_1').showModal()}>open modal</button> */
-}

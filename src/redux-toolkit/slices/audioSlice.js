@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../axios";
+import { fetchTrack } from "./trackSlice";
 const audioSlice = createSlice({
   name: "audio",
   initialState: {
@@ -50,6 +51,16 @@ const audioSlice = createSlice({
       })
       .addCase(fetchAudioAndPlay.rejected, (state, action) => {
         state.status = 'failed';
+      })
+      .addCase(fetchAudioAndPlayRandom.pending, (state, action) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAudioAndPlayRandom.fulfilled, (state, action) => {
+        state.status = 'succeed';
+        state.audioMp3 = action.payload;
+      })
+      .addCase(fetchAudioAndPlayRandom.rejected, (state, action) => {
+        state.status = 'failed';
       });
   }
 });
@@ -75,13 +86,39 @@ export const fetchAudioAndPlay = createAsyncThunk(
       const response = await axiosInstance.get(`tracks/file/${id}`, {
         responseType: "blob"
       });
-
+      console.log(id);
       // Tạo URL từ Blob vì state không cho lưu blob
       const audioURL = URL.createObjectURL(response.data);
-      console.log(audioURL);
+      // console.log(audioURL);
 
       // Dispatch action setPlay để bắt đầu chơi audio ngay sau khi fetch thành công
       dispatch(setPlay());
+
+      return audioURL;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Ném lỗi để `fetchTrack.rejected` xử lý
+    }
+  }
+);
+
+export const fetchAudioAndPlayRandom = createAsyncThunk(
+  "audio/fetchAudioAndPlayRandom",
+  async (id,{ dispatch }) => {
+    try {
+      const newid = await axiosInstance.get(`tracks/getOneRandomTrack`)
+      console.log(newid);
+      const response = await axiosInstance.get(`tracks/file/${newid.data.id}`, {
+        responseType: "blob"
+      });
+      // console.log(id);
+      // Tạo URL từ Blob vì state không cho lưu blob
+      const audioURL = URL.createObjectURL(response.data);
+      // console.log(audioURL);
+
+      // Dispatch action setPlay để bắt đầu chơi audio ngay sau khi fetch thành công
+      dispatch(setPlay());
+      dispatch(fetchTrack(newid.data.id));
 
       return audioURL;
     } catch (error) {

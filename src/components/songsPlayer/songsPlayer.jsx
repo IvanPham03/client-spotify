@@ -29,7 +29,7 @@ const SongsPlayer = () => {
 
   const handlePlay = () => {
     dispatch(togglePlaying());
-    console.log(playing);
+    // console.log(playing);
   };
   const handleShuffle = () => {
     dispatch(toogleShuffling());
@@ -95,7 +95,7 @@ const SongsPlayer = () => {
         // if (audioRef.current.ended) {
         //   handleNext();
         // } else {
-        console.log(audioRef.current.currentTime);
+        // console.log(audioRef.current.currentTime);
         setPosition(audioRef.current.currentTime);
         // }
         if(audioRef.current.currentTime === audioRef.current.duration){

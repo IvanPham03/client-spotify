@@ -27,7 +27,7 @@ const MainSection = () => {
       <Header username={user ? user.userName : "user"} img={meomeo} />
       <Modal />
       <div className="main-section-container">
-        {view === "browse" ? <Browse /> : null}
+        {/* {view === "browse" ? <Browse /> : null} */}
         {view === "playlist" ? <Playlist /> : null}
         {view === "recently" ? <Songs recently /> : null}
         {view === "songs" ? <Songs /> : null}
@@ -41,45 +41,5 @@ const MainSection = () => {
     </div>
   );
 };
-// class MainSection extends Component {
-//   render = () => {
-//     // let name = this.props.user.display_name;
-//     // let id = this.props.user.id;
 
-//     // let img = this.props.user.images[0]
-//     //   ? this.props.user.images[0].url
-//     //   : defaultProfile;
-
-//     let img = defaultProfile;
-//     let name= "Trường đẹp trai khoai to"
-//     let id = "0001"
-//     return (
-//       <div className="main-section">
-//         <Header username={name || id} img={img} />
-//         <Modal />
-//         <div className="main-section-container">
-//           {this.props.view === 'browse' ? <Browse /> : null}
-//           {this.props.view === 'playlist' ? <Playlist /> : null}
-//           {this.props.view === 'recently' ? <Songs recently /> : null}
-//           {this.props.view === 'songs' ? <Songs /> : null}
-//           {this.props.view === 'artist' ? <Artist /> : null}
-//           {this.props.view === 'album' ? <Album /> : null}
-//           {this.props.view === 'search' ? <Search /> : null}
-//           {this.props.view === 'albums' ? <Albums /> : null}
-//           {this.props.view === 'artists' ? <Artists /> : null}
-//         </div>
-//         <Footer />
-//       </div>
-//     );
-//   };
-// }
-
-// const mapStateToProps = state => {
-//   return {
-//     user: state.userReducer.user,
-//     view: state.uiReducer.view
-//   };
-// };
-
-// export default connect(mapStateToProps)(MainSection);
 export default MainSection;

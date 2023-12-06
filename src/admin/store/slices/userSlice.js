@@ -49,7 +49,7 @@ export const fetchUser = createAsyncThunk("userAdmin/fetchUser", async token => 
         Authorization: `Bearer ${accessToken}`,
       }
     };
-    const response = await axiosInstance.get("auth/User", config)
+    const response = await axiosInstance.get("/api/Authenticate/users", config)
     console.log(response.data);
     return response.data;
   } catch (error) {

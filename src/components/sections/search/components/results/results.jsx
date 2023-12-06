@@ -2,9 +2,10 @@ import React from "react";
 
 import ResultGroup from "./resultGroup";
 import { useSelector } from "react-redux";
-import Song from '../../../../songsTable/items/song2'
+import Song from '../../../../songsTable/items/song'
 const results = () => {
-  const songs = useSelector(state => state.search.track);
+  const songs = useSelector(state => state.trackList.value);
+  console.log(songs);
   const artists = useSelector(state => state.search.playlist);
   const albums = useSelector(state => state.search.album);
   const playlists = useSelector(state => state.search.artist);
@@ -13,16 +14,31 @@ const results = () => {
     <div className="table-container mt-10">
       <div className="results-table">
         <div>
-          {songs !== null
-            ? songs.map((item, i) =>
+        {songs.map((item, i) => (
                 <Song
-                  item={item.track || item}
-                  key={item.track ? item.track.id + i : item.id + i}
-                  id={item.track ? item.track.id : item.id}
-                  songList={songs}
+                  // onAdd={() => {
+                  //   props.changeSongStatus(i, true);
+                  //   props.addSong(item.track ? item.track.id : item.id);
+                  // }}
+                  // onDelete={() => {
+                  //   props.changeSongStatus(i, false);
+                  //   props.removeSong(item.track ? item.track.id : item.id);
+                  // }}
+                  // removeDate={props.removeDate}
+                  // added_at={item.track ? item.added_at : ""}
+                  // contains={props.songsStatus[i]}
+                  // item={item.track || item}
+                  // key={item.track ? item.track.id + i : item.id + i}
+                  // id={item.track ? item.track.id : item.id}
+                  // uri={props.uri}
+                  // offset={i}
+                  // current={props.current}
+                  // playing={props.playing}
+                  // pauseSong={props.pauseSong}
+                  // playSong={props.playSong}
+                  item = {item}
                 />
-              )
-            : null}
+              ))}
         </div>
       </div>
     </div>

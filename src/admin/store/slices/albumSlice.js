@@ -41,7 +41,7 @@ export const fetchAlbum = createAsyncThunk("albumAdmin/fetchAlbum", async token 
         Authorization: `Bearer ${accessToken}`,
       }
     };
-    const response = await axiosInstance.get("api/Album", config)
+    const response = await axiosInstance.get("Album", config)
     console.log(response.data);
     return response.data;
   } catch (error) {

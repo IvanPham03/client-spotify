@@ -94,14 +94,14 @@
 }
 .playlist-Modal .modal-body .title-input span {
   display: block;
-  font-family: "Proxima Thin", Georgia, sans-serif;
+  /* font-family: "Proxima Thin", Georgia, sans-serif; */
   color: rgb(170, 170, 170);
   font-size: 15px;
   margin-bottom: 5px;
 }
 .playlist-Modal .modal-body .title-input input {
   width: 80%;
-  font-family: "Proxima Thin", Georgia, sans-serif;
+  /* font-family: "Proxima Thin", Georgia, sans-serif; */
   font-size: 15px;
   outline: none;
   padding: 0 88px 0 8px;
@@ -136,6 +136,7 @@
 }
 .playlist-Modal .modal-body .description .image img {
   width: 100%;
+  margin-top: 14px;
 }
 .playlist-Modal .modal-body .description .text {
   display: inline-block;
@@ -148,10 +149,11 @@
   height: 175px;
   border-radius: 5px;
   outline: none;
-  font-family: "Proxima Thin", Georgia, sans-serif;
+  margin-top: 10px;
+  /* font-family: "Proxima Thin", Georgia, sans-serif; */
 }
 .playlist-Modal .modal-body .error-message {
-  height: 20px;
+  height: 30px;
   background-color: #ca1f1f;
   border-radius: 5px;
   padding: 5px 15px;

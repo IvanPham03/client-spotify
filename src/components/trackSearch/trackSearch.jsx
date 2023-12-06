@@ -6,6 +6,7 @@ import withUiActions from '../../hoc/uiHoc';
 import { fetchSearchData } from '../../store/actions/searchActions';
 import { setView } from '../../redux-toolkit/slices/uiSlice';
 import { fetchTrack } from '../../redux-toolkit/slices/searchSlice';
+import { searchTrack } from '../../redux-toolkit/slices/trackListSlice';
 
 const container = {
   position: 'relative',
@@ -19,7 +20,7 @@ const trackSearch = () => {
     dispatch(setView('search'))
   }
   const handleSearch = async(e) =>{
-    dispatch(fetchTrack(e.target.value))
+    dispatch(searchTrack(e.target.value))
   }
   return (
     <div className="track-search-container" style={container}>
@@ -38,32 +39,3 @@ const trackSearch = () => {
 }
 
 export default trackSearch
-// class search extends Component {
-//   render = () => (
-//     <div className="track-search-container" style={container}>
-//       <form>
-//         <input
-//           type="text"
-//           placeholder="Search..."
-//           style={input}
-//           onChange={event => this.props.fetchSearchData(event.target.value)}
-//           onClick={this.props.onSearch}
-//         />
-//       </form>
-//     </div>
-//   );
-// }
-
-// const mapDispatchToProps = dispatch => {
-//   return bindActionCreators(
-//     {
-//       fetchSearchData
-//     },
-//     dispatch
-//   );
-// };
-
-// export default connect(
-//   null,
-//   mapDispatchToProps
-// )(withUiActions(search));

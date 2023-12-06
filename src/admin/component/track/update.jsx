@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setModalEdit } from "../../../../redux-toolkit/slices/uiSlice";
-import axios from "../../../../axios";
-import { fetchPlaylist } from "../../../store/slices/playlistSlice";
+import { setModalEdit, setModalTrack } from "../../../redux-toolkit/slices/uiSlice";
+import axios from "../../../axios";
+import { fetchTrack } from "../../store/slices/trackSlice";
 const update = props => {
   const dispacth = useDispatch();
-  const modal = useSelector(state => state.ui.modal);
+  const modal = useSelector(state => state.ui.track);
   const user = useSelector(state => state.user.user);
   const [create, setCreate] = useState(null);
   const [update, setUpdate] = useState(null);
-  const [playlistName, setPlaylistName] = useState(null);
-  const [playlistDescription, setPlaylistDescription] = useState(null);
+  const [trackGenre, settrackGenre] = useState(null);
+  const [trackName, settrackName] = useState(null);
   const handleClickCancel = () => {
-    dispacth(setModalEdit(false));
+    dispacth(setModalTrack(false));
   };
 
   const formatDateTime = dateTimeString => {
@@ -30,13 +30,14 @@ const update = props => {
     const seconds = timePart.substring(4, 6);
 
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    console.log(formattedDateTime);
     return formattedDateTime;
   };
 
   const handleSubmit = async () => {
     try {
-      const playlistId =
-        props.playlistUpdate !== null ? props.playlistUpdate.id : "";
+      const trackId =
+        props.trackUpdate !== null ? props.trackUpdate.id : "";
       const userId = user.id;
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
@@ -50,15 +51,15 @@ const update = props => {
         }
       };
       const data = {
-        playlistDescription: playlistDescription,
-        playlistName: playlistName,
-        createAt: create,
-        updateOn: update
+        "trackName": trackName,
+        "createAt": create,
+        "updateOn": update,
+        "trackGenre": trackGenre
       };
 
-      if (playlistId !== "" && userId !== null) {
+      if (trackId !== "" && userId !== null) {
         const res = await axios.put(
-          `Playlist/update/${playlistId}/by/${userId}`,
+          `tracks/${trackId}`,
           data,
           {
             config
@@ -67,7 +68,7 @@ const update = props => {
         if(res.data){
           alert("cập nhật thành công")
           dispacth(setModalEdit(false))
-          dispacth(fetchPlaylist())
+          dispacth(fetchTrack())
         }
       }
     } catch (error) {
@@ -77,19 +78,24 @@ const update = props => {
   useEffect(
     () => {
       if (modal) {
-        setPlaylistDescription(props.playlistUpdate.playlistDescription);
-        setPlaylistName(props.playlistUpdate.playlistName);
-        setUpdate(formatDateTime(props.playlistUpdate.updateOn));
-        setCreate(formatDateTime(props.playlistUpdate.createAt));
+        settrackName(props.trackUpdate.trackName);
+        setUpdate(formatDateTime(props.trackUpdate.updateOn));
+        setCreate(formatDateTime(props.trackUpdate.createAt));
+        settrackGenre(props.trackUpdate.genre)
       }
     },
     [modal]
   );
-
+  const handleInputChange = event => {
+    setCreate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
+  };
+  const handleInputUpdate = event => {
+    setUpdate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
+  };
   const handleDelete = async () => {
     try {
-      const playlistId =
-        props.playlistUpdate !== null ? props.playlistUpdate.id : "";
+      const trackId =
+        props.trackUpdate !== null ? props.trackUpdate.id : "";
       const userId = user.id;
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
@@ -103,38 +109,31 @@ const update = props => {
         }
       };
 
-      if (playlistId !== "" && userId !== null) {
+      if (trackId !== "" && userId !== null) {
         const res = await axios.delete(
-          `Playlist/${playlistId}/deleteBy/${userId}`,
+          `tracks/${trackId}`,
           {
             config
           }
         );
-        console.log(res.data);
+        if(res.status === 200){
+          alert(`Xoá thành công ${trackId}`)
+        }
+        else{
+          alert(`Xoá thất bại`)
+        }
       }
     } catch (error) {
       console.log(error);
+      alert(`Xoá thất bại`)
     }
-  };
-  // Xử lý sự kiện thay đổi giá trị của input
-  const handleInputChange = event => {
-    setCreate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
-  };
-  const handleInputUpdate = event => {
-    setUpdate(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
-  };
-  const handleInputDescription = event => {
-    setPlaylistDescription(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
-  };
-  const handleInputPlaylististname = event => {
-    setPlaylistName(event.target.value); // Cập nhật giá trị state từ sự kiện onChange
   };
   return (
     <div>
       <div className={`playlist-Modal ${modal ? "active" : ""}`}>
         <div className="modal-content mt-14">
           <div className="text-center my-5">
-            <h1 className="text-2xl">Hello các bạn trẻ</h1>
+            <h1 className="text-2xl">Thông tin</h1>
           </div>
           <div className="modal-body mb-5">
             <form class="mx-2 mt-5">
@@ -152,56 +151,57 @@ const update = props => {
                   placeholder=""
                   readOnly
                   value={
-                    props.playlistUpdate !== null ? props.playlistUpdate.id : ""
+                    props.trackUpdate !== null ? props.trackUpdate.id : ""
                   }
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="playlistName"
+                  for="trackName"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Tên
+                  Tên bài hát
                 </label>
                 <input
                   type="text"
-                  id="playlistName"
-                  onChange={handleInputPlaylististname}
-                  value={playlistName !== null ? playlistName : ""}
+                  id="trackName"
+                  onChange={(e) => settrackName(e.target.value)}
+                  value={trackName !== null ? trackName : ""}
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="playlistDescription"
+                  for="trackDescription"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Mô tả
+                  Thể loại
                 </label>
                 <input
                   type="text"
-                  onChange={handleInputDescription}
-                  id="playlistDescription"
+                  onChange={(e) => settrackGenre(e.target.value)}
+                  id="trackDescription"
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   value={
-                    playlistDescription !== null ? playlistDescription : ""
+                    trackGenre !== null ? trackGenre : ""
                   }
                 />
               </div>
               <div class="mb-5 flex justify-between">
                 <label
-                  for="imgPlaylist"
+                  for="imgtrack"
                   class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Hình ảnh
+                  Đường dẫn
                 </label>
                 <input
-                  type="file"
-                  id="imgPlaylist"
+                  type="text"
+                  id="imgtrack"
+                  readOnly
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                   value={
-                    props.playlistUpdate !== null
-                      ? props.playlistUpdate.imgPlaylist
+                    props.trackUpdate !== null
+                      ? props.trackUpdate.url
                       : ""
                   }
                 />
@@ -249,31 +249,11 @@ const update = props => {
                   type="text"
                   id="user"
                   value={
-                    props.playlistUpdate !== null ? props.playlistUpdate.id : ""
+                    props.trackUpdate !== null ? props.trackUpdate.user.id !== undefined ?  props.trackUpdate.user.id : props.trackUpdate.user : ""
                   }
                   class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                 />
               </div>
-              <div class="mb-5 flex justify-between">
-                <label
-                  for="playlistPolicy"
-                  class="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Hiển thị
-                </label>
-                <input
-                  type="text"
-                  id="playlistPolicy"
-                  class="max-w-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  readOnly
-                  value={
-                    props.playlistUpdate !== null
-                      ? props.playlistUpdate.playlistPolicy
-                      : ""
-                  }
-                />
-              </div>
-
               <div className="flex justify-end gap-3">
                 <button
                   onClick={handleClickCancel}

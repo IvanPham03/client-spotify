@@ -4,7 +4,7 @@ import "./userDetails.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setPause } from "../../redux-toolkit/slices/audioSlice";
-
+import meomeo from '../../utilities/ass/meomeo.jpg'
 const header = props => {
   const navigate =  useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,7 @@ const header = props => {
         <img
           alt="user"
           className="h-10 w-10 fill rounded-full"
-          src={user.img}
+          src={meomeo}
         />
         <p className="">
           {user !== null ? user.username : "Tài khoản"}

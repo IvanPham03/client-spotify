@@ -1,6 +1,6 @@
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import {setModalEdit} from '../../../redux-toolkit/slices/uiSlice'
 const items = props => {

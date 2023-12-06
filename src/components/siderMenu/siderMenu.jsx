@@ -55,12 +55,12 @@ const SiderMenu = () => {
       // dispatch(fetchPlaylistOnly(item.id))
       dispatch(setView('playlist'));
     } else {
-      dispatch(setView(item.view || "browse"));
+      dispatch(setView(item.view || "songs"));
     }
   };
   return (
     <ul className="side-menu-container">
-      {generateItems(sectionOne)}
+      {/* {generateItems(sectionOne)} */}
       <h3 className="library-header">Your Library</h3>
       {generateItems(sectionTwo)}
       <div className="user-playlist-container">
