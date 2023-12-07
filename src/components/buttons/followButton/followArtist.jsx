@@ -5,7 +5,7 @@ import withUserActions from '../../../hoc/userHoc';
 
 const followArtistBtn = ({ following, followArtist, unfollowArtist }) => {
   const onClick = following ? unfollowArtist : followArtist;
-  return <Button onClick={onClick} following={following} />;
+  return <Button  />;
 };
 
 export default withUserActions(followArtistBtn);

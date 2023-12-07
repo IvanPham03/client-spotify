@@ -134,7 +134,7 @@ const update = props => {
       <div className={`playlist-Modal ${modal ? "active" : ""}`}>
         <div className="modal-content mt-14">
           <div className="text-center my-5">
-            <h1 className="text-2xl">Hello các bạn trẻ</h1>
+            <h1 className="text-2xl">Thông tin</h1>
           </div>
           <div className="modal-body mb-5">
             <form class="mx-2 mt-5">

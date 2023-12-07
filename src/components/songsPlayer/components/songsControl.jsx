@@ -41,7 +41,7 @@ const songsControl = props => {
     if(pre.length >2){
       await dispatch(fetchAudioAndPlay(pre[pre.length-2].id));
       await dispatch(fetchTrack(pre[pre.length-2].id));
-      await dispatch(remove(pre[pre.length-2].id))
+      await dispatch(remove(pre[pre.length-1].id))
       await dispatch(remove(pre[pre.length-1].id))
     }
     else{

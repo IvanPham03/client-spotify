@@ -51,7 +51,7 @@ export const fetchPlaylistTrack = createAsyncThunk("playlistTrack/fetchPlaylist"
         Authorization: `Bearer ${accessToken}`,
       }
     };
-    const response = await axiosInstance.get(`Playlist/getAllPlaylistByUserId/${id}`, config)
+    const response = await axiosInstance.get(`tracks/byPlaylist/${id}`, config)
     console.log(response.data);
     return response.data;
   } catch (error) {

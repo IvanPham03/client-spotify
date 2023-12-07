@@ -24,17 +24,19 @@ const Register = () => {
     }
     if( password !== confirmPassword){
       setError('Mật khẩu không khớp');
+      return;
     }
     if(!isStrongPassword(password)){
       setError('Mật khẩu có ít nhất 8 ký tự, bao gồm ký tự hoa, thường và ký tự đặc biệt');
+      return;
     }
     handleRegister()
   } 
   const handleRegister = async() =>{
     const data = {
-      Email: email,
-      Password: password,
-      UserName: name
+      email: email,
+      password: password,
+      username: name
     };
     try {
       const response = await axiosInstance.post("api/Authenticate/register", data);

@@ -50,8 +50,9 @@ const SiderMenu = () => {
   };
   const setActiveClick = (item, playlist) => {
     setActive(item.id);
+    console.log(item.id);
     if (playlist) {
-      // dispatch(fetchPlaylistTrack(item.id));
+      dispatch(fetchPlaylistTrack(item.id));
       // dispatch(fetchPlaylistOnly(item.id))
       dispatch(setView('playlist'));
     } else {

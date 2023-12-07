@@ -31,7 +31,7 @@ const Playlist = () => {
     // <Spinner section loading={this.props.fetching}>
       <div className="player-container">
         <Header
-          songs={playlist ? playlist.$values : []}
+          songs={playlist ? playlist : []}
           // empty={
           //   this.props.playlist && this.props.playlist.tracks.items.length
           //     ? false
@@ -56,7 +56,7 @@ const Playlist = () => {
           // current={this.props.currentSong}
           // playing={this.props.playing}
           // uri={this.props.playlist ? this.props.playlist.uri : ""}
-          songs={playlist ? playlist.$values : []}
+          songs={playlist !== null ? playlist : []}
           // songList = {true}
           // pauseSong={this.props.pauseSong}
           // playSong={this.props.playSong}
@@ -65,69 +65,6 @@ const Playlist = () => {
     // </Spinner>
   );
 };
-
-// export default withStatus(Playlist);
-// class Playlist extends Component {
-//   render = () => {
-//     return (
-//       <Spinner section loading={this.props.fetching}>
-//         <div className="player-container">
-//           <Header
-//             empty={
-//               this.props.playlist && this.props.playlist.tracks.items.length
-//                 ? false
-//                 : true
-//             }
-//             playlist={this.props.playlist || {}}
-//             currentUri={this.props.currentUri}
-//             playing={this.props.playing}
-//             pauseSong={this.props.pauseSong}
-//             playSong={() => this.props.playSong(this.props.playlist.uri, 0)}
-//           />
-//           <Table
-//             more={
-//               this.props.playlist && this.props.playlist.tracks.next
-//                 ? true
-//                 : false
-//             }
-//             playlist={this.props.playlist || {}}
-//             fetchMoreSongs={this.props.fetchMoreSongs}
-//             movePlaylistSong={this.props.movePlaylistSong}
-//             current={this.props.currentSong}
-//             playing={this.props.playing}
-//             uri={this.props.playlist ? this.props.playlist.uri : ""}
-//             songs={this.props.playlist ? this.props.playlist.tracks.items : []}
-//             pauseSong={this.props.pauseSong}
-//             playSong={this.props.playSong}
-//           />
-//         </div>
-//       </Spinner>
-//     );
-//   };
-// }
-// const mapStateToProps = state => {
-//   return {
-//     playlist: state.playlistReducer.playlist
-//       ? state.playlistReducer.playlist
-//       : null,
-//     fetching: state.playlistReducer.fetchPlaylistPending
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return bindActionCreators(
-//     {
-//       fetchMoreSongs,
-//       movePlaylistSong
-//     },
-//     dispatch
-//   );
-// };
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(withStatus(Playlist));
 
 
 export default Playlist

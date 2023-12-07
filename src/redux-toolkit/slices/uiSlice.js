@@ -8,7 +8,8 @@ const uiSlice = createSlice({
     mode: "new",
     track: false,
     album: false,
-    user: false
+    user: false,
+    addPlaylist: false
   },
   reducers: {
     setView: (state, action) => {
@@ -28,9 +29,12 @@ const uiSlice = createSlice({
     },
     setModalAlbum: (state, action) => {
       state.album = action.payload;
+    },
+    setaddPlaylist: (state, action) => {
+      state.addPlaylist = action.payload;
     }
   }
 });
 
-export const { setView, setModal, setModalEdit, setModalTrack, setModalUser, setModalAlbum } = uiSlice.actions;
+export const { setView, setModal, setModalEdit, setModalTrack, setModalUser, setModalAlbum, setaddPlaylist } = uiSlice.actions;
 export default uiSlice.reducer;

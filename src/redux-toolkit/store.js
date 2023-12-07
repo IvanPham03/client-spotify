@@ -17,6 +17,7 @@ import trackAdmin from "../admin/store/slices/trackSlice"
 import playlistAdmin from "../admin/store/slices/playlistSlice"
 import albumAdmin from "../admin/store/slices/albumSlice"
 import userAdmin from "../admin/store/slices/userSlice"
+import addPlaylist from './slices/addPlaylist';
 const store = configureStore({
   reducer: {
     track: trackReducer,
@@ -35,6 +36,7 @@ const store = configureStore({
     playlistAdmin: playlistAdmin,
     albumAdmin: albumAdmin,
     userAdmin: userAdmin,
+    addPlaylist: addPlaylist,
     middleware: [thunk]
   },
 });

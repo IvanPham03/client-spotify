@@ -4,10 +4,10 @@ import './followButton.css';
 
 const btn = ({ following, onClick }) => (
   <button
-    onClick={onClick}
+    // onClick={onClick}
     className={'follow-btn ' + (following ? 'following' : '')}
   >
-    {following ? '' : 'FOLLOW'}
+   FOLLOW
   </button>
 );
 

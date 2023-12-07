@@ -28,19 +28,5 @@ const LeftSection  = () =>{
 
 }
 
-// const mapDispatchToProps = dispatch => {
-//   return bindActionCreators(
-//     {
-//       setModal
-//     },
-//     dispatch
-//   );
-// };
-
-// export default connect(
-//   null,
-//   mapDispatchToProps
-// )(LeftSection);
-
 
 export default LeftSection

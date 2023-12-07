@@ -17,15 +17,22 @@ import Modal from "../../components/playlistModal/modal";
 import defaultProfile from "./images/profile.png";
 import meomeo from '../../utilities/ass/meomeo.jpg'
 import "./mainSection.css";
-
+import AddList from '../../components/playlistModal/addPlaylist'
 const MainSection = () => {
   let img = defaultProfile;
   const user = useSelector(state => state.user.user)
   const view  = useSelector(state => state.ui.view)
+  const addNew = useSelector(state => state.ui.modal)
+  const addList = useSelector(state => state.ui.addPlaylist)
   return (
     <div className="main-section">
       <Header username={user ? user.userName : "user"} img={meomeo} />
-      <Modal />
+      {
+        addNew ?  <Modal /> : null
+      }
+      {
+        addList ?  <AddList /> : null
+      }
       <div className="main-section-container">
         {/* {view === "browse" ? <Browse /> : null} */}
         {view === "playlist" ? <Playlist /> : null}

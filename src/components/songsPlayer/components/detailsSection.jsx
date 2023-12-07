@@ -3,6 +3,8 @@ import React from "react";
 import withUiActions from "../../../hoc/uiHoc";
 import withStatus from "../../../hoc/statusHoc";
 import { useDispatch, useSelector } from "react-redux";
+import { setaddPlaylist } from "../../../redux-toolkit/slices/uiSlice";
+import { setAddPlaylist } from "../../../redux-toolkit/slices/addPlaylist";
 
 const artistName = {
   fontFamily: "'Proxima Thin', Georgia, sans-serif",
@@ -14,6 +16,12 @@ const numberOfArtists = 2; // Số lượng nghệ sĩ bạn muốn hiển thị
 
 const detailsSection = props => {
   const track = useSelector(state => state.track.value);
+
+  const dispatch = useDispatch()
+  const handleAddplaylist = () =>{
+    dispatch(setaddPlaylist(true))
+    dispatch(setAddPlaylist(track.id))
+  }
   return (
     <div className="details-section mt-2">
       <div className="add-remove-section">
@@ -34,7 +42,7 @@ const detailsSection = props => {
           : <i
               className="fa fa-plus"
               aria-hidden="true"
-              // onClick={() => props.addSong(track.ID, true)}
+              onClick={() => handleAddplaylist()}
             />}
       </div>
       <div className="artist-name" style={artistName}>
